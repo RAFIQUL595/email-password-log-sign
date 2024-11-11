@@ -1,13 +1,17 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { Helmet } from "react-helmet-async";
 import { auth } from "../../firebase/firebase";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [loginError, setLoginError] = useState("");
   const [showLog, setShowLog] = useState(false);
+  const emailRef = useRef();
 
   const handleLogIn = (event) => {
     event.preventDefault();
@@ -32,6 +36,21 @@ const Login = () => {
         setLoginError(error.message);
       });
   };
+  const handleForgotPassword = () => {
+    console.log("sent me Email", emailRef.current.value);
+    const email = emailRef.current.value;
+    if (!email) {
+      console.log("Please current Email Address");
+    } else {
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          console.log("Password reset email sent!");
+        })
+        .catch((error) => {
+          setLoginError("Please Try aging Letter",error);
+        });
+    }
+  };
 
   return (
     <div>
@@ -49,6 +68,7 @@ const Login = () => {
             <input
               type="email"
               name="email"
+              ref={emailRef}
               placeholder="email"
               className="input input-bordered"
               required
@@ -72,7 +92,7 @@ const Login = () => {
             >
               {showLog ? <FaEyeSlash /> : <FaEye />}
             </button>
-            <label className="label">
+            <label onClick={handleForgotPassword} className="label">
               <a href="#" className="label-text-alt link link-hover">
                 Forgot password?
               </a>
