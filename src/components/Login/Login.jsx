@@ -20,7 +20,12 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result.user);
-        toast.success("Successfully logged in!");
+        // EmailVerification checked
+        if (!result.user.emailVerified) {
+          setLoginError("Please Verifiyed Your Email addresh");
+        } else {
+          toast.success("Successfully logged in!");
+        }
       })
       .catch((error) => {
         console.log("ERROR", error.message);

@@ -1,4 +1,7 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { Helmet } from "react-helmet-async";
 import { auth } from "./../../firebase/firebase";
 import { useState } from "react";
@@ -43,6 +46,11 @@ const Register = () => {
       .then((result) => {
         console.log(result.user);
         setSuccess(true);
+
+        // sendEmailVerification(auth.currentUser)
+        sendEmailVerification(auth.currentUser).then(() => {
+          console.log("Email Verification Code Send");
+        });
       })
       .catch((error) => {
         setErrorMessage(error.message);

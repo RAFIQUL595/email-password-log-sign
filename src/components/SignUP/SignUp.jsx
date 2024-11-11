@@ -4,6 +4,7 @@ import { auth } from "../../firebase/firebase";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { sendEmailVerification } from "firebase/auth";
 
 const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -39,6 +40,10 @@ const SignUp = () => {
       .then((result) => {
         console.log(result.user);
         setSuccess(true);
+        // sendEmailVerification(auth.currentUser)
+        sendEmailVerification(auth.currentUser).then(() => {
+          console.log("Email verification code send");
+        });
       })
       .catch((error) => {
         console.log("ERROR", error);
